@@ -12,7 +12,7 @@ import { Stats } from "../models/Stats.js";
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
   const file = req.file;
-  if (!name || !email || !password || !file)
+  if (!name || !email || !password)
     return next(new ErrorHandler("Please enter all fields", 400));
 
   let user = await User.findOne({ email });
