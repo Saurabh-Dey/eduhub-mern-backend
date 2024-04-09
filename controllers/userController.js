@@ -12,7 +12,7 @@ import { Stats } from "../models/Stats.js";
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
   const file = req.file;
-  if (!name || !email || !password)
+  if (!name || !email || !password || !file)
     return next(new ErrorHandler("Please enter all fields", 400));
 
   let user = await User.findOne({ email });
@@ -30,7 +30,7 @@ export const register = catchAsyncError(async (req, res, next) => {
       url: mycloud.secure_url,
     },
   });
-  sendToken(res, user, "Registerd Successfully", 201);
+  sendToken(res, user, "Registered Successfully", 201);
 });
 
 export const login = catchAsyncError(async (req, res, next) => {
@@ -41,8 +41,6 @@ export const login = catchAsyncError(async (req, res, next) => {
 
   const user = await User.findOne({ email }).select("+password");
   if (!user) return next(new ErrorHandler("Incorrect Email or Password", 401));
-
-  //upload file on cloudinary
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch)
